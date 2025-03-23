@@ -3,8 +3,8 @@ export const initialStore = () => {
     message: null,
     contador: 0,
     personajes: [],
-    contacts: [], // Cambiamos personajes por contacts
-    agendas: [], // Agregamos agendas
+    contacts: [], // Agregamos contactos
+    agendas: { agendas: [] }, // Agregamos agendas
   };
 };
 
@@ -38,6 +38,12 @@ export default function storeReducer(store, action = {}) {
       return {
         ...store,
         agendas: action.payload, // Guarda las agendas en el estado
+      };
+
+    case "agregar_agenda": // Nuevo caso para agregar una sola agenda
+      return {
+        ...store,
+        agendas: [...store.agendas.agendas, action.payload], // Agrega la nueva agenda al estado
       };
 
     case "guardar_contactos":
@@ -101,9 +107,9 @@ export async function obtenerYGuardarPersonajes(dispatch) {
 
 const API_URL = "https://playground.4geeks.com/contact";
 
-export async function obtenerContactos(dispatch) {
+export async function obtenerContactos(dispatch, slug) {
   try {
-    const response = await fetch(`${API_URL}/agendas/your_agenda_name/contacts`);
+    const response = await fetch(`${API_URL}/agendas/${slug}`);
     if (!response.ok) {
       throw new Error("Error al obtener los contactos");
     }
@@ -117,9 +123,9 @@ export async function obtenerContactos(dispatch) {
   }
 }
 
-export async function crearContacto(contacto, dispatch) {
+export async function crearContacto(contacto, dispatch, slug) {
   try {
-    const response = await fetch(`${API_URL}/agendas/your_agenda_name/contacts`, {
+    const response = await fetch(`${API_URL}/agendas/${slug}/contacts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -139,15 +145,18 @@ export async function crearContacto(contacto, dispatch) {
   }
 }
 
-export async function actualizarContacto(contacto, dispatch) {
+export async function actualizarContacto(contacto, dispatch, slug) {
   try {
-    const response = await fetch(`${API_URL}/agendas/your_agenda_name/contacts/${contacto.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(contacto),
-    });
+    const response = await fetch(
+      `${API_URL}/agendas/${slug}/contacts/${contacto.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(contacto),
+      }
+    );
     if (!response.ok) {
       throw new Error("Error al actualizar el contacto");
     }
@@ -161,9 +170,9 @@ export async function actualizarContacto(contacto, dispatch) {
   }
 }
 
-export async function eliminarContacto(id, dispatch) {
+export async function eliminarContacto(id, dispatch, slug) {
   try {
-    const response = await fetch(`${API_URL}/agendas/your_agenda_name/contacts/${id}`, {
+    const response = await fetch(`${API_URL}/agendas/${slug}/contacts/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
@@ -191,5 +200,37 @@ export async function obtenerAgendas(dispatch) {
     });
   } catch (error) {
     console.error("Error al cargar las agendas:", error);
+  }
+}
+export async function crearAgenda(slug, dispatch) {
+  try {
+    const response = await fetch(`${API_URL}/agendas/${slug}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Respuesta de la API:", response); // Depuración
+
+    if (!response.ok) {
+      const errorData = await response.json(); // Intenta obtener más detalles del error
+      console.error("Error al crear la agenda:", errorData); // Depuración
+      throw new Error(errorData.message || "Error al crear la agenda");
+    }
+
+    const data = await response.json();
+    console.log("Agenda creada:", data); // Depuración
+
+    // Despacha la acción para agregar la nueva agenda al estado
+    dispatch({
+      type: "agregar_agenda",
+      payload: data, // La nueva agenda creada
+    });
+
+    return data; // Devuelve la agenda creada
+  } catch (error) {
+    console.error("Error al crear la agenda, o ya existe :", error); // Depuración
+    throw error; // Relanza el error para manejarlo en el componente
   }
 }

@@ -1,140 +1,59 @@
 import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-import {
-  obtenerContactos,
-  crearContacto,
-  actualizarContacto,
-  eliminarContacto,
-  obtenerAgendas,
-} from "../store"; // Importa las funciones CRUD
-import Contador from "../components/Contador.jsx";
-import GetPersonajes from "./GetPersonajes.jsx";
+import { crearAgenda, obtenerAgendas } from "../store"; // Importa la función crearAgenda
+import Agendas from "./Agendas.jsx";
 
 export const Home = () => {
   const { store, dispatch } = useGlobalReducer();
-  const [nuevoContacto, setNuevoContacto] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    address: "",
-  });
-  const [editando, setEditando] = useState(null); // Estado para manejar la edición
-  const { agendas } = store;
+  const [newAgendaSlug, setNewAgendaSlug] = useState(""); // Estado para el input del slug
+  const [loading, setLoading] = useState(false); // Estado para manejar la carga
+  const [error, setError] = useState(null); // Estado para manejar errores
 
-  console.log({ agendas });
-
-  // Obtener los contactos al cargar el componente
-  useEffect(() => {
-    obtenerContactos(dispatch);
-    obtenerAgendas(dispatch);
-  }, [dispatch]);
-
-  // Manejar el envío del formulario (crear o actualizar contacto)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (editando) {
-      await actualizarContacto({ ...nuevoContacto, id: editando }, dispatch);
-    } else {
-      await crearContacto(nuevoContacto, dispatch);
+  const handleCreateAgenda = async () => {
+    if (!newAgendaSlug) {
+      alert("Por favor, ingresa un nombre para la agenda.");
+      return;
     }
-    setNuevoContacto({ name: "", phone: "", email: "", address: "" }); // Limpiar el formulario
-    setEditando(null); // Salir del modo de edición
-  };
 
-  // Manejar la eliminación de un contacto
-  const handleEliminar = (id) => {
-    if (window.confirm("¿Estás seguro de eliminar este contacto?")) {
-      eliminarContacto(id, dispatch);
+    setLoading(true);
+    setError(null);
+
+    try {
+      await crearAgenda(newAgendaSlug, dispatch); // Crea la agenda
+      obtenerAgendas(dispatch); // Actualiza la lista de agendas
+      setNewAgendaSlug(""); // Limpia el input después de crear la agenda
+    } catch (error) {
+      setError("Error al crear la agenda. Inténtalo de nuevo.");
+    } finally {
+      setLoading(false);
     }
-  };
-
-  // Manejar la edición de un contacto
-  const handleEditar = (contacto) => {
-    setNuevoContacto(contacto);
-    setEditando(contacto.id);
   };
 
   return (
     <div className="text-center mt-5">
       <h1>Hello Rigo!!</h1>
 
-      {/*    <Contador /> */}
-
-      {/* Lista de Contactos */}
-      <h2>Lista de Contactos</h2>
-      {store.contacts.length === 0 ? (
-        <p>No hay contactos disponibles.</p>
-      ) : (
-        <ul>
-          {store.contacts.map((contact) => (
-            <li key={contact.id}>
-              <h3>{contact.name}</h3>
-              <p>Teléfono: {contact.phone}</p>
-              <p>Email: {contact.email}</p>
-              <p>Dirección: {contact.address}</p>
-              <button onClick={() => handleEditar(contact)}>Editar</button>
-              <button onClick={() => handleEliminar(contact.id)}>
-                Eliminar
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-      <div>
-        <h2>Agendas</h2>
-        {agendas.length === 0 ? (
-          <p>No hay agendas disponibles.</p>
-        ) : (
-          <ul>
-            {agendas.agendas.map((agenda) => (
-              <li key={agenda.id}>
-                <h3>{agenda.slug}</h3>
-                <p>Descripción: {agenda.description}</p>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Input para crear una nueva agenda */}
+      <div className="mb-4">
+        <input
+          type="text"
+          value={newAgendaSlug}
+          onChange={(e) => setNewAgendaSlug(e.target.value)}
+          placeholder="Nombre de la nueva agenda"
+          className="form-control w-50 mx-auto"
+        />
+        <button
+          onClick={handleCreateAgenda}
+          className="btn btn-primary mt-2"
+          disabled={loading}
+        >
+          {loading ? "Creando..." : "Crear Agenda"}
+        </button>
+        {error && <p className="text-danger mt-2">{error}</p>}
       </div>
 
-      {/* Formulario para agregar/editar contactos */}
-      <h2>{editando ? "Editar Contacto" : "Agregar Contacto"}</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nombre"
-          value={nuevoContacto.name}
-          onChange={(e) =>
-            setNuevoContacto({ ...nuevoContacto, name: e.target.value })
-          }
-        />
-        <input
-          type="text"
-          placeholder="Teléfono"
-          value={nuevoContacto.phone}
-          onChange={(e) =>
-            setNuevoContacto({ ...nuevoContacto, phone: e.target.value })
-          }
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={nuevoContacto.email}
-          onChange={(e) =>
-            setNuevoContacto({ ...nuevoContacto, email: e.target.value })
-          }
-        />
-        <input
-          type="text"
-          placeholder="Dirección"
-          value={nuevoContacto.address}
-          onChange={(e) =>
-            setNuevoContacto({ ...nuevoContacto, address: e.target.value })
-          }
-        />
-        <button type="submit">{editando ? "Actualizar" : "Agregar"}</button>
-      </form>
-
-      {/*<GetPersonajes /> */}
+      {/* Componente Agendas */}
+      <Agendas />
     </div>
   );
 };
