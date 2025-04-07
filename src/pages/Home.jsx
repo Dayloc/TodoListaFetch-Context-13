@@ -3,6 +3,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { crearAgenda, obtenerAgendas } from "../store"; // Importa la función crearAgenda
 import Agendas from "./Agendas.jsx";
 
+
 export const Home = () => {
   const { store, dispatch } = useGlobalReducer();
   const [newAgendaSlug, setNewAgendaSlug] = useState(""); // Estado para el input del slug
@@ -32,7 +33,7 @@ export const Home = () => {
   return (
     <div className="text-center mt-5">
       <h1>Hello Rigo!!</h1>
-
+    
       {/* Input para crear una nueva agenda */}
       <div className="mb-4">
         <input

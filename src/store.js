@@ -2,7 +2,7 @@ export const initialStore = () => {
   return {
     message: null,
     contador: 0,
-    personajes: [],
+   
     contacts: [], // Agregamos contactos
     agendas: { agendas: [] }, // Agregamos agendas
   };
@@ -28,11 +28,7 @@ export default function storeReducer(store, action = {}) {
         message: "Hola prueba", // Actualiza el mensaje
       };
 
-    case "guardar_personajes":
-      return {
-        ...store,
-        personajes: action.payload, // Guarda los personajes en el estado
-      };
+    
 
     case "guardar_agendas":
       return {
@@ -79,31 +75,7 @@ export default function storeReducer(store, action = {}) {
   }
 }
 
-export async function getPersonajes() {
-  try {
-    const response = await fetch("https://rickandmortyapi.com/api/character");
-    if (!response.ok) {
-      throw new Error("Error al obtener los personajes");
-    }
-    const data = await response.json();
-    return data.results;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
-}
 
-export async function obtenerYGuardarPersonajes(dispatch) {
-  try {
-    const personajes = await getPersonajes();
-    dispatch({
-      type: "guardar_personajes",
-      payload: personajes,
-    });
-  } catch (error) {
-    console.error("Error al obtener y guardar los personajes:", error);
-  }
-}
 
 const API_URL = "https://playground.4geeks.com/contact";
 

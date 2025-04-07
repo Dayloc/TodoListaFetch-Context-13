@@ -12,6 +12,7 @@ function Contact() {
   const { slug } = useParams(); // Obtén el slug de la URL
   const { agendas, contacts } = store;
 
+  console.log(contacts)
   // Estado para manejar la edición del contacto
   const [editingContact, setEditingContact] = useState(null);
   const [editedName, setEditedName] = useState("");
@@ -71,7 +72,7 @@ function Contact() {
   return (
     <div className="container mt-5">
       <div className="text-center">
-        <Link to={`/add-contact/${slug}`}>Add contact</Link>
+        <Link to={`/add-contact/${slug}`}><button className="btn btn-primary">Add contact</button></Link>
         <h2 className="mb-4">Agenda de: {slug}</h2>
         {loadingAgenda ? (
           <p>Cargando agenda...</p> // Muestra un mensaje de carga mientras se obtiene la agenda
