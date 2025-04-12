@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { useParams } from "react-router-dom";
-import {
-  obtenerContactos,
-  actualizarContacto,
-  eliminarContacto,
-} from "../store";
+import {obtenerContactos, actualizarContacto, eliminarContacto,
+} from "../services/Fetchs";
 import { Link } from "react-router-dom";
 function Contact() {
   const { store, dispatch } = useGlobalReducer();

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-import { crearAgenda, obtenerAgendas } from "../store"; // Importa la función crearAgenda
+import { crearAgenda, obtenerAgendas } from "../services/Fetchs.js"; // Importa la función crearAgenda
 import Agendas from "./Agendas.jsx";
 
 

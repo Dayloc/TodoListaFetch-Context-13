@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { crearContacto, actualizarContacto } from "./../store";
+import { crearContacto, actualizarContacto } from "../services/Fetchs";
 import useGlobalReducer from "./../hooks/useGlobalReducer";
 import { useNavigate, useParams } from "react-router-dom";
 

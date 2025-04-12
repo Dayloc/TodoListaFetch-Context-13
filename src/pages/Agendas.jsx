@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { obtenerAgendas } from "./../store.js";
+
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
+import { obtenerAgendas } from "../services/Fetchs.js";
 
 function Agendas() {
   const { store, dispatch } = useGlobalReducer();
