@@ -8,6 +8,7 @@ function Agendas() {
   const { agendas } = store;
 
   console.log({ agendas });
+  console.log(agendas)
 
   useEffect(() => {
     obtenerAgendas(dispatch);

@@ -12,7 +12,7 @@ function Contact() {
   const { slug } = useParams(); // Obtén el slug de la URL
   const { agendas, contacts } = store;
 
-  console.log(contacts)
+
   // Estado para manejar la edición del contacto
   const [editingContact, setEditingContact] = useState(null);
   const [editedName, setEditedName] = useState("");
