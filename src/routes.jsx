@@ -9,7 +9,7 @@ import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import Contact from "./pages/Contact";
 import AddContact from "./pages/AddContact";
-import Contador from "./components/Contador";
+
 
 
 export const router = createBrowserRouter(
@@ -28,7 +28,7 @@ export const router = createBrowserRouter(
       <Route path="/contact/:slug" element={<Contact />} />
       <Route path="/add-contact/:slug" element={<AddContact />} />
       <Route path="/edit-contact/:id" element={<AddContact />} />
-      <Route path="/contador" element={<Contador />} />
+    
     </Route>
   )
 );

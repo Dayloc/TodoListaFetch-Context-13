@@ -8,8 +8,7 @@ function Agendas() {
   const { store, dispatch } = useGlobalReducer();
   const { agendas } = store;
 
-  console.log({ agendas });
-  console.log(agendas)
+ 
 
   useEffect(() => {
     obtenerAgendas(dispatch);

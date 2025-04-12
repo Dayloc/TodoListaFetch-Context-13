@@ -16,7 +16,7 @@ function AddContact({ contactToEdit }) {
       address: "",
     }
   );
-  console.log({ slug });
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (contactToEdit) {

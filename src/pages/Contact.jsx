@@ -17,15 +17,15 @@ function Contact() {
   const [editedEmail, setEditedEmail] = useState("");
   const [loadingAgenda, setLoadingAgenda] = useState(true); // Estado para manejar la carga de la agenda
 
-  // Protección: Si agendas no está definido o no es un array, usa un array vacío
+  // Protección: para buscar la agenda y si no hay agenda devuelve un null
   const agenda = Array.isArray(agendas)
     ? agendas.find((agenda) => agenda.slug === slug)
     : null;
-
+//cargar los contactos
   useEffect(() => {
     if (!agenda) {
       obtenerContactos(dispatch, slug).finally(() => {
-        setLoadingAgenda(false); // Finaliza la carga, independientemente del resultado
+      setLoadingAgenda(false); // Finaliza la carga, independientemente del resultado
       });
     } else {
       setLoadingAgenda(false); // Si ya existe la agenda, no hay carga
@@ -147,7 +147,9 @@ function Contact() {
                           Cancelar
                         </button>
                       </div>
-                    ) : (
+                    ) 
+                    :
+                    (
                       // Detalles del contacto
                       <div>
                         <p className="mb-1">
@@ -165,7 +167,7 @@ function Contact() {
 
                   {/* Botones de editar y eliminar */}
                   {editingContact !== contact.id && (
-                    <div>
+                    <div className="bg-warning">
                       <button
                         onClick={() => handleEdit(contact)}
                         className="btn btn-primary btn-sm me-2"
